@@ -78,7 +78,7 @@ export default function Employees() {
 
       {/* Search */}
       <form onSubmit={onSearch} >
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by name or email…" className="form-control" />
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by name, email, or department..." className="form-control" />
         <div className="col-sm-4 col-md-3 d-flex gap-2">
           <button type="submit" className="btn btn-primary w-100">Search</button>
           <button type="button" className="btn btn-outline-secondary w-100" onClick={() => { setQ(""); load(); }}>Clear</button>
