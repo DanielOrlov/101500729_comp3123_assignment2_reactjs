@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { EmployeesAPI } from "../api";
+import { Link } from "react-router-dom";
 
 export default function Employees() {
   const [items, setItems] = useState([]);
@@ -141,8 +142,9 @@ export default function Employees() {
               <td style={td}>{e.email}</td>
               <td style={td}>{e.department}</td>
               <td style={td}>{e.salary}</td>
+              <td><Link to={`/employees/${e._id}`} className="btn btn-sm btn-primary me-2">View</Link></td>
               <td style={td}>
-                <button onClick={() => onPatchDept(e._id, e.department)}>Change dept</button>{" "}
+                <button onClick={() => onPatchDept(e._id, e.department)}>Change department</button>{" "}
                 <button onClick={() => onDelete(e._id)}>Delete</button>
               </td>
             </tr>
