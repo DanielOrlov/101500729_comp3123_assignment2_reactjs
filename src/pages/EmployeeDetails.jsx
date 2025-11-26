@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import Modal from "../components/Modal";
 
@@ -27,6 +27,15 @@ export default function EmployeeDetails() {
         email: "",
         department: "",
     });
+
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const shouldAutoOpenEdit = searchParams.get("edit") === "1";
+    const shouldAutoOpenDelete = searchParams.get("delete") === "1";
+
+    const validateEdit = (first_name, last_name, position, salary, email, department) => {
+        return first_name.trim() && last_name.trim() && position.trim() && salary!=0 && email.trim() && department.trim()
+    }
 
     useEffect(() => {
         const load = async () => {
@@ -71,6 +80,15 @@ export default function EmployeeDetails() {
         };
         load();
     }, [id]);
+
+    useEffect(() => {
+        if (!loading && employee && shouldAutoOpenEdit) {
+            setShowEdit(true);
+        }
+        else if (!loading && employee && shouldAutoOpenDelete) {
+            setShowDelete(true);
+        }
+    }, [loading, employee, shouldAutoOpenDelete]);
 
     if (loading) {
         return (
@@ -223,7 +241,7 @@ export default function EmployeeDetails() {
 
                     <div class-name="modal-footer">
                         <button type="button" className="btn btn-secondary my-2 mx-2" onClick={() => setShowEdit(false)}>Cancel</button>
-                        <button type="submit" className="btn btn-primary my-2 mx-2">Save changes</button>
+                        <button disabled={!validateEdit(editForm.first_name, editForm.last_name, editForm.position, editForm.salary, editForm.email, editForm.department)} type="submit" className="btn btn-primary my-2 mx-2">Save changes</button>
                     </div>
 
 

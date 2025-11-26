@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { EmployeesAPI } from "../api";
-import { Link } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { formatSalary } from "../util/format";
 
 export default function Employees() {
@@ -67,30 +67,6 @@ export default function Employees() {
     }
   };
 
-  const onDelete = async (id) => {
-    if (!window.confirm("Delete this employee?")) return;
-    try {
-      setErr("");
-      await EmployeesAPI.remove(id);
-      setItems((prev) => prev.filter((x) => x._id !== id));
-    } catch (e) {
-      setErr(e.response?.data?.message || e.message);
-    }
-  };
-
-  const onPatchDept = async (id, current) => {
-    const department = window.prompt("New department:", current || "");
-    if (department == null) return; // cancelled
-    try {
-      setErr("");
-      const res = await EmployeesAPI.patchDepartment(id, department);
-      // optimistic replace
-      setItems((prev) => prev.map((x) => (x._id === id ? res.data.data : x)));
-    } catch (e) {
-      setErr(e.response?.data?.message || e.message);
-    }
-  };
-
   const onSearch = async (e) => {
     e.preventDefault();
     await load();
@@ -141,9 +117,9 @@ export default function Employees() {
               <td>{e.department}</td>
               <td>{formatSalary(e.salary)}</td>
               <td className="d-flex align-items-center gap-1">
-                <Link to={`/employees/${e._id}`} className="btn btn-sm btn-primary me-2">View</Link>
-                <button onClick={() => onPatchDept(e._id, e.department)} className="btn btn-sm btn-outline-secondary me-2">Change department</button>{" "}
-                <button onClick={() => onDelete(e._id)} className="btn btn-sm btn-danger">Delete</button>
+                <Link to={`/employees/${e._id}`} className="btn btn-primary">View</Link>
+                <Link to={`/employees/${e._id}?edit=1`} className="btn btn-warning" >Edit</Link>
+                <Link to={`/employees/${e._id}?delete=1`} className="btn btn-danger" >Delete</Link>
               </td>
             </tr>
           ))}
