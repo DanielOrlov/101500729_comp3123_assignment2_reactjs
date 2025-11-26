@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { EmployeesAPI } from "../api";
 import { Link } from "react-router-dom";
+import { formatSalary } from "../util/format";
 
 export default function Employees() {
   const [items, setItems] = useState([]);
@@ -59,7 +60,7 @@ export default function Employees() {
         department: form.department.trim(),
         salary: form.salary.trim()
       });
-      setForm({ first_name: "", last_name: "", email: "", department: "", salary: ""});
+      setForm({ first_name: "", last_name: "", email: "", department: "", salary: "" });
       await load();
     } catch (e) {
       setErr(e.response?.data?.message || e.message);
@@ -96,19 +97,16 @@ export default function Employees() {
   };
 
   return (
-    <div style={{ maxWidth: 900, margin: "24px auto", padding: 16 }}>
-      <h1>Employees</h1>
+    <div className="container mt-4">
+      <h1 className="text-center my-4">Employee List</h1>
 
       {/* Search */}
-      <form onSubmit={onSearch} style={{ marginBottom: 16, display: "flex", gap: 8 }}>
-        <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Search by name or email…"
-          style={{ flex: 1, padding: 8 }}
-        />
-        <button type="submit">Search</button>
-        <button type="button" onClick={() => { setQ(""); load(); }}>Clear</button>
+      <form onSubmit={onSearch} >
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by name or email…" className="form-control" />
+        <div className="col-sm-4 col-md-3 d-flex gap-2">
+          <button type="submit" className="btn btn-primary w-100">Search</button>
+          <button type="button" className="btn btn-outline-secondary w-100" onClick={() => { setQ(""); load(); }}>Clear</button>
+        </div>
       </form>
 
       {/* Create */}
@@ -125,38 +123,35 @@ export default function Employees() {
       {loading && <p style={{ marginTop: 12 }}>Loading…</p>}
 
       {/* List */}
-      <table style={{ width: "100%", marginTop: 16, borderCollapse: "collapse" }}>
-        <thead>
+      <table className="table table-striped table-hover align-middle">
+        <thead className="table-light">
           <tr>
-            <th style={th}>Name</th>
-            <th style={th}>Email</th>
-            <th style={th}>Department</th>
-            <th style={th}>Salary($)</th>
-            <th style={th}>Actions</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Salary($)</th>
+            <th style={{ width: "220px" }}>Actions</th>
           </tr>
         </thead>
         <tbody>
           {items.map((e) => (
             <tr key={e._id}>
-              <td style={td}>{e.first_name} {e.last_name}</td>
-              <td style={td}>{e.email}</td>
-              <td style={td}>{e.department}</td>
-              <td style={td}>{e.salary}</td>
-              <td><Link to={`/employees/${e._id}`} className="btn btn-sm btn-primary me-2">View</Link></td>
-              <td style={td}>
-                <button onClick={() => onPatchDept(e._id, e.department)}>Change department</button>{" "}
-                <button onClick={() => onDelete(e._id)}>Delete</button>
+              <td>{e.first_name} {e.last_name}</td>
+              <td>{e.email}</td>
+              <td>{e.department}</td>
+              <td>{formatSalary(e.salary)}</td>
+              <td className="d-flex align-items-center gap-1">
+                <Link to={`/employees/${e._id}`} className="btn btn-sm btn-primary me-2">View</Link>
+                <button onClick={() => onPatchDept(e._id, e.department)} className="btn btn-sm btn-outline-secondary me-2">Change department</button>{" "}
+                <button onClick={() => onDelete(e._id)} className="btn btn-sm btn-danger">Delete</button>
               </td>
             </tr>
           ))}
           {items.length === 0 && !loading && (
-            <tr><td colSpan="4" style={{ padding: 16, opacity: 0.7 }}>No employees.</td></tr>
+            <tr><td colSpan="4" className="text-center text-muted py-4">No employees.</td></tr>
           )}
         </tbody>
       </table>
     </div>
   );
 }
-
-const th = { textAlign: "left", borderBottom: "1px solid #ddd", padding: "8px 6px" };
-const td = { borderBottom: "1px solid #eee", padding: "8px 6px" };

@@ -3,6 +3,8 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Modal from "../components/Modal";
 
+import { formatDate, formatSalary } from "../util/format";
+
 const api = axios.create({
     baseURL: "https://101500729-comp3123-assignment1.vercel.app/api",
 });
@@ -92,23 +94,6 @@ export default function EmployeeDetails() {
                 </Link>
             </div>
         );
-    }
-
-    const formatDate = (value) => {
-        const date = new Date(value)
-        return new Intl.DateTimeFormat("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric"
-        }).format(date);
-    }
-
-    const formatSalary = (value) => {
-        return new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 0
-        }).format(value) + " per year";
     }
 
     return (
