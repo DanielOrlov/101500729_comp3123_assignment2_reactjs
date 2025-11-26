@@ -1,3 +1,15 @@
+COMP3123_Assignment1 <br>
+Student: Daniil Orlov <br>
+Student id: 101500729 <br>
+
+To do:
+- Sign Up
+- Login
+- Logout
+- Add Employee
+- add profile pic
+- Update search - only position and department
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
