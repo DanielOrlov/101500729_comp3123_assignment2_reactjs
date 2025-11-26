@@ -6,9 +6,11 @@ To do:
 - Sign Up
 - Login
 - Logout
-- Add Employee
 - add profile pic
 - Update search - only position and department
+
+Completed tasks:
+- Add Employee 
 
 # Getting Started with Create React App
 

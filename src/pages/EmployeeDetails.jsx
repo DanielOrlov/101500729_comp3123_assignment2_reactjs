@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import Modal from "../components/Modal";
 
-import { formatDate, formatSalary } from "../util/format";
+import { formatDate, formatSalary, validateEdit } from "../util/format";
 
 const api = axios.create({
     baseURL: "https://101500729-comp3123-assignment1.vercel.app/api",
@@ -32,10 +32,6 @@ export default function EmployeeDetails() {
     const searchParams = new URLSearchParams(location.search);
     const shouldAutoOpenEdit = searchParams.get("edit") === "1";
     const shouldAutoOpenDelete = searchParams.get("delete") === "1";
-
-    const validateEdit = (first_name, last_name, position, salary, email, department) => {
-        return first_name.trim() && last_name.trim() && position.trim() && salary!=0 && email.trim() && department.trim()
-    }
 
     useEffect(() => {
         const load = async () => {
@@ -241,7 +237,12 @@ export default function EmployeeDetails() {
 
                     <div class-name="modal-footer">
                         <button type="button" className="btn btn-secondary my-2 mx-2" onClick={() => setShowEdit(false)}>Cancel</button>
-                        <button disabled={!validateEdit(editForm.first_name, editForm.last_name, editForm.position, editForm.salary, editForm.email, editForm.department)} type="submit" className="btn btn-primary my-2 mx-2">Save changes</button>
+                        <button 
+                            disabled={!validateEdit(editForm.first_name, 
+                            editForm.last_name, 
+                            editForm.position, editForm.salary, 
+                            editForm.email, editForm.department)}
+                            type="submit" className="btn btn-primary my-2 mx-2">Save changes</button>
                     </div>
 
 
@@ -279,7 +280,6 @@ export default function EmployeeDetails() {
                                 navigate("/employees"); // go back to list
                             } catch (err) {
                                 setError(err.response?.data?.message || err.message);
-                                setShowDelete(false);
                             }
                         }}
                     >
