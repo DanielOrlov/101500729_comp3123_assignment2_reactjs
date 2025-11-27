@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
+import { EmployeesAPI } from "../api";
 import Modal from "../components/Modal";
 
 import { formatDate, formatSalary, validateEdit } from "../util/format";
-
-const api = axios.create({
-    baseURL: "https://101500729-comp3123-assignment1.vercel.app/api",
-});
 
 export default function EmployeeDetails() {
     const { id } = useParams();
@@ -38,7 +34,7 @@ export default function EmployeeDetails() {
             try {
                 setError("");
                 setLoading(true);
-                const res = await api.get(`/v1/employees/${id}`);
+                const res = await EmployeesAPI.getEmployeeById(id);
                 const emp = res.data?.data;
                 setEmployee(emp);
 
@@ -66,7 +62,7 @@ export default function EmployeeDetails() {
             try {
                 setError("");
                 setLoading(true);
-                const res = await api.get(`/v1/employees/${id}`);
+                const res = await EmployeesAPI.getEmployeeById(id);
                 setEmployee(res.data?.data);
             } catch (e) {
                 setError(e.response?.data?.message || e.message);
@@ -160,7 +156,7 @@ export default function EmployeeDetails() {
                     onSubmit={async (e) => {
                         e.preventDefault();
                         try {
-                            const res = await api.put(`/v1/employees/${id}`, editForm);
+                            const res = await EmployeesAPI.updateEmployee(id, editForm);
                             setEmployee(res.data.data);
                             setShowEdit(false);
                         } catch (err) {
@@ -275,7 +271,7 @@ export default function EmployeeDetails() {
                         onClick={async () => {
                             try {
                                 setError("");
-                                await api.delete(`/v1/employees/${id}`);
+                                await EmployeesAPI.deleteEmployee(id);
                                 setShowDelete(false);
                                 navigate("/employees"); // go back to list
                             } catch (err) {

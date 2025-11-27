@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { EmployeesAPI } from "../api";
-import { Link, useParams, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { formatSalary, validateCreate } from "../util/format";
 import Modal from "../components/Modal";
 
@@ -25,7 +25,7 @@ export default function Employees() {
       setLoading(true);
       const res = q.trim()
         ? await EmployeesAPI.search(q.trim())
-        : await EmployeesAPI.list();
+        : await EmployeesAPI.getAllEmployees();
       setItems(res.data?.data ?? []);
     } catch (e) {
       setErr(e.response?.data?.message || e.message);
@@ -102,7 +102,7 @@ export default function Employees() {
             e.preventDefault();
             try {
               setErr("");
-              await EmployeesAPI.create({
+              await EmployeesAPI.addEmployee({
                 first_name: addForm.first_name.trim(),
                 last_name: addForm.last_name.trim(),
                 email: addForm.email.trim().toLowerCase(),
