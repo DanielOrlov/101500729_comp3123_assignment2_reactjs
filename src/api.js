@@ -13,13 +13,12 @@ export const EmployeesAPI = {
   search: (q) => api.get("/v1/employees/search", { params: { q } }),
   addEmployee: (payload) => api.post("/v1/employees", payload),
   updateEmployee: (id, payload) => api.put(`/v1/employees/${id}`, payload),
-  patchDepartment: (id, department) =>
-    api.patch(`/v1/employees/${id}`, { department }),
+  patchDepartment: (id, department) => api.patch(`/v1/employees/${id}`, { department }),
   deleteEmployee: (id) => api.delete(`/v1/employees/${id}`),
 };
 
 export const UsersAPI = {
-  list: (params) => api.get("/v1/users", { params }),
-  create: (payload) => api.post("/v1/users", payload),
+  getAllUsers: (params) => api.get("/v1/users", { params }),
+  addUser: (payload) => api.post("/v1/users", payload),
   login: (payload) => api.post("/v1/users/login", payload),
 };
