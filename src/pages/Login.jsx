@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { UsersAPI } from "../api";
-import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
-import Modal from "../components/Modal";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
 
@@ -14,12 +14,43 @@ export default function Login() {
     password: "",
   });
 
+  const navigate = useNavigate();
+  const { login: authLogin } = useAuth(); // rename to avoid clash with form field
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await UsersAPI.login(loginForm);
+      console.log("Logged in:", res.data);
+
+      // backend returns { status, message, user, token }
+      const { user, token } = res.data;
+
+      // save token in localStorage
+      localStorage.setItem("authToken", token);
+
+      // save user in context
+      authLogin(user);
+
+      // redirect to employee view
+      navigate("/employees");
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="container mt-4">
-      <div classname="row justify-content-center">
-        <div classname="card-body">
-          <div classname="d-flex align-items-center mb-3">
-            <h1 className="text-center my-4">Login</h1>
+      <div className="row justify-content-center">
+        <div className="card-body">
+          <h1 className="text-center my-4">Login</h1>
+          <div className="d-flex align-items-center mb-3">
 
             {error && (
               <div className="alert alert-danger">
@@ -27,19 +58,7 @@ export default function Login() {
               </div>
             )}
 
-            <form
-              onSubmit={async (e) => {
-                e.preventDefault();
-                try {
-                  const res = await UsersAPI.login(loginForm);
-                  console.log("Logged in:", res.data);
-
-
-                  //navigate("/employees");
-                } catch (err) {
-                  setError(err.response?.data?.message || err.message);
-                }
-              }}>
+            <form onSubmit={handleSubmit}>
 
               <div className="mb-3">
                 <label className="form-label">Username/Email</label>

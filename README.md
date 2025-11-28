@@ -4,13 +4,13 @@ Student id: 101500729 <br>
 
 To do:
 - Sign Up
-- Login
 - Logout
 - add profile pic
 - Update search - only position and department
 
 Completed tasks:
 - Add Employee 
+- Login
 
 # Getting Started with Create React App
 

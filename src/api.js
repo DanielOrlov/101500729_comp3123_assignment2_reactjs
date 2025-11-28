@@ -2,8 +2,15 @@ import axios from "axios";
 
 export const api = axios.create({
   baseURL: "https://101500729-comp3123-assignment1.vercel.app/api",
-  headers: { "Content-Type": "application/json" },
-  withCredentials: true, // uncomment if you later use cookies
+  headers: { "Content-Type": "application/json" }
+});
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("authToken");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 // Employees API helpers

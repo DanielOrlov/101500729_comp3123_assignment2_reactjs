@@ -9,7 +9,7 @@ import EmployeeDetails from "./pages/EmployeeDetails";
 function App() {
 
   return (
-    <BrowserRouter>
+    <>
       <nav style={{ display: "flex", gap: 12, padding: 12 }}>
         <Link to="/login">Login</Link>
         <Link to="/signup">Sign up</Link>
@@ -23,7 +23,7 @@ function App() {
         <Route path="/employees/:id" element={<EmployeeDetails />} />
         <Route path="*" element={<div>Default</div>} />
       </Routes>
-    </BrowserRouter>
+    </>
   );
 }
 
