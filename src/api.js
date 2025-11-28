@@ -3,7 +3,7 @@ import axios from "axios";
 export const api = axios.create({
   baseURL: "https://101500729-comp3123-assignment1.vercel.app/api",
   headers: { "Content-Type": "application/json" },
-  // withCredentials: true, // uncomment if you later use cookies
+  withCredentials: true, // uncomment if you later use cookies
 });
 
 // Employees API helpers
