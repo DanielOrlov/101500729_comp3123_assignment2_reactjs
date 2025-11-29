@@ -10,12 +10,6 @@ function App() {
 
   return (
     <>
-      <nav style={{ display: "flex", gap: 12, padding: 12 }}>
-        <Link to="/login">Login</Link>
-        <Link to="/signup">Sign up</Link>
-        <Link to="/employees">Employees</Link>
-      </nav>
-
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

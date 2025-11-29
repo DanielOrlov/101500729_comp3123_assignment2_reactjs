@@ -59,7 +59,14 @@ export default function Employees() {
       {/* Header: title + logout */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1 className="h3 mb-0">Employee List</h1>
-        <button onClick={handleLogout} className="btn btn-outline-danger btn-sm">Logout</button>
+
+        <div className="d-flex align-items-center gap-3">
+          {user && (
+            <span className="text-muted">Logged in as: <strong>{user.username}</strong></span>
+          )}
+
+          <button onClick={handleLogout}className="btn btn-outline-danger btn-sm">Logout</button>
+        </div>
       </div>
 
       {/* Search row */}
@@ -87,7 +94,7 @@ export default function Employees() {
       </form>
 
       {/* Status messages */}
-      {err && ( <p style={{ color: "tomato", marginTop: 8 }}>Error: {err}</p>)}
+      {err && (<p style={{ color: "tomato", marginTop: 8 }}>Error: {err}</p>)}
       {loading && (
         <p style={{ marginTop: 8 }}>Loading…</p>
       )}
@@ -116,10 +123,10 @@ export default function Employees() {
               <td>{e.department}</td>
               <td>{formatSalary(e.salary)}</td>
               <td>
-                <div className="btn-group" role="group">
-                  <Link to={`/employees/${e._id}`} className="btn btn-sm btn-primary">View</Link>
-                  <Link to={`/employees/${e._id}?edit=1`} className="btn btn-sm btn-warning">Edit</Link>
-                  <Link to={`/employees/${e._id}?delete=1`} className="btn btn-sm btn-danger">Delete</Link>
+                <div>
+                  <Link to={`/employees/${e._id}`} className="btn btn-primary me-2">View</Link>
+                  <Link to={`/employees/${e._id}?edit=1`} className="btn btn-warning me-2">Edit</Link>
+                  <Link to={`/employees/${e._id}?delete=1`} className="btn btn-danger me-2">Delete</Link>
                 </div>
               </td>
             </tr>
