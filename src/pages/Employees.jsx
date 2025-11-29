@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { EmployeesAPI } from "../api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { formatSalary, validateCreate } from "../util/format";
 import Modal from "../components/Modal";
+import { useAuth } from "../context/AuthContext";
 
 export default function Employees() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [q, setQ] = useState("");
+
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const [showAdd, setShowAdd] = useState(false);
   const [addForm, setAddForm] = useState({
@@ -18,6 +22,12 @@ export default function Employees() {
     department: "",
     salary: "",
   });
+
+  const handleLogout = () => {
+    logout();            // clears user + token
+    navigate("/login");  // go back to login page
+  };
+
 
   const load = async () => {
     try {
@@ -46,29 +56,56 @@ export default function Employees() {
 
   return (
     <div className="container mt-4">
-      <h1 className="text-center my-4">Employee List</h1>
-      {/* Search */}
-      <form onSubmit={onSearch} >
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by name, email, or department..." className="form-control" />
-        <div className="col-sm-4 col-md-3 d-flex gap-2">
-          <button type="submit" className="btn btn-primary w-100 mt-2">Search</button>
-          <button type="button" className="btn btn-outline-secondary w-100 mt-2" onClick={() => { setQ(""); load(); }}>Clear</button>
+      {/* Header: title + logout */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h1 className="h3 mb-0">Employee List</h1>
+        <button onClick={handleLogout} className="btn btn-outline-danger btn-sm">Logout</button>
+      </div>
+
+      {/* Search row */}
+      <form onSubmit={onSearch} className="mb-3">
+        <div className="row g-2 align-items-end">
+          <div className="col-md-8">
+            <label className="form-label fw-semibold">Search</label>
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              placeholder="Search by name, email, or department..."
+              className="form-control"
+            />
+          </div>
+          <div className="col-md-4 d-flex gap-2">
+            <button type="submit" className="btn btn-primary flex-fill">Search</button>
+            <button type="button" className="btn btn-outline-secondary flex-fill"
+              onClick={() => {
+                setQ("");
+                load();
+              }}
+            > Clear </button>
+          </div>
         </div>
       </form>
 
-      {err && <p style={{ color: "tomato", marginTop: 12 }}>Error: {err}</p>}
-      {loading && <p style={{ marginTop: 12 }}>Loading…</p>}
+      {/* Status messages */}
+      {err && ( <p style={{ color: "tomato", marginTop: 8 }}>Error: {err}</p>)}
+      {loading && (
+        <p style={{ marginTop: 8 }}>Loading…</p>
+      )}
 
-      {/* List */}
-      <button className="btn btn-success my-2 mx-2" onClick={() => setShowAdd(true)}>+ Add Employee</button>
+      {/* Add employee aligned right */}
+      <div className="d-flex justify-content-start mb-2">
+        <button className="btn btn-success" onClick={() => setShowAdd(true)}>+ Add Employee </button>
+      </div>
+
+      {/* Table */}
       <table className="table table-striped table-hover align-middle">
         <thead className="table-light">
           <tr>
             <th>Name</th>
             <th>Email</th>
             <th>Department</th>
-            <th>Salary($)</th>
-            <th style={{ width: "220px" }}>Actions</th>
+            <th>Salary ($)</th>
+            <th style={{ width: "240px" }}>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -78,15 +115,20 @@ export default function Employees() {
               <td>{e.email}</td>
               <td>{e.department}</td>
               <td>{formatSalary(e.salary)}</td>
-              <td className="d-flex align-items-center gap-1">
-                <Link to={`/employees/${e._id}`} className="btn btn-primary">View</Link>
-                <Link to={`/employees/${e._id}?edit=1`} className="btn btn-warning" >Edit</Link>
-                <Link to={`/employees/${e._id}?delete=1`} className="btn btn-danger" >Delete</Link>
+              <td>
+                <div className="btn-group" role="group">
+                  <Link to={`/employees/${e._id}`} className="btn btn-sm btn-primary">View</Link>
+                  <Link to={`/employees/${e._id}?edit=1`} className="btn btn-sm btn-warning">Edit</Link>
+                  <Link to={`/employees/${e._id}?delete=1`} className="btn btn-sm btn-danger">Delete</Link>
+                </div>
               </td>
             </tr>
           ))}
           {items.length === 0 && !loading && (
-            <tr><td colSpan="4" className="text-center text-muted py-4">No employees.</td></tr>
+            <tr>
+              {/* small fix: colspan should match # of columns (5 here) */}
+              <td colSpan="5" className="text-center text-muted py-4">No employees.</td>
+            </tr>
           )}
         </tbody>
       </table>
@@ -200,9 +242,9 @@ export default function Employees() {
               type="submit"
               className="btn btn-success"
               disabled={!validateCreate(addForm.first_name,
-                addForm.last_name, 
-                addForm.salary, 
-                addForm.email, 
+                addForm.last_name,
+                addForm.salary,
+                addForm.email,
                 addForm.department)}
             >
               Add Employee

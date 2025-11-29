@@ -5,6 +5,7 @@ Student id: 101500729 <br>
 To do:
 - Sign Up
 - Logout
+- automatic redirect if logged in
 - add profile pic
 - Update search - only position and department
 

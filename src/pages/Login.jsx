@@ -46,14 +46,15 @@ export default function Login() {
   };
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-5">
       <div className="row justify-content-center">
-        <div className="card-body">
-          <h1 className="text-center my-4">Login</h1>
-          <div className="d-flex align-items-center mb-3">
+        <div className="col-md-5">
+
+          <div className="card shadow-sm p-4">
+            <h1 className="text-center mb-4">Login</h1>
 
             {error && (
-              <div className="alert alert-danger">
+              <div className="alert alert-danger text-center">
                 {error}
               </div>
             )}
@@ -65,7 +66,7 @@ export default function Login() {
                 <input
                   className="form-control"
                   value={loginForm.login}
-                  placeholder="Enter username or login..."
+                  placeholder="Enter username or email..."
                   onChange={(e) =>
                     setLoginForm((f) => ({ ...f, login: e.target.value }))
                   }
@@ -84,13 +85,18 @@ export default function Login() {
                   }
                 />
               </div>
-              <button type="submit" className="btn btn-success my-2 mx-2">Login</button>
-              <Link to="/signup" className="btn btn-primary my-2 mx-2">Sign Up</Link>
+
+              <div className="d-flex flex-column gap-2 mt-3">
+                <button type="submit" className="btn btn-success">Login</button>
+                <Link to="/signup" className="btn btn-primary">Sign Up</Link>
+              </div>
             </form>
           </div>
+
         </div>
       </div>
     </div>
+
   );
 
 }
