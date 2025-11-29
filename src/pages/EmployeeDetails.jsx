@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
-import { EmployeesAPI } from "../api";
+import { EmployeesAPI, API_ROOT } from "../api";
 import Modal from "../components/Modal";
+
 
 import { formatDate, formatSalary, validateEdit } from "../util/format";
 
@@ -10,6 +11,7 @@ export default function EmployeeDetails() {
     const [employee, setEmployee] = useState(null);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
+    const fileInputRef = useRef(null);
 
     const navigate = useNavigate();
 
@@ -106,6 +108,23 @@ export default function EmployeeDetails() {
         );
     }
 
+    const handleAvatarUpload = async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append("avatar", file);
+
+        try {
+            const res = await EmployeesAPI.uploadAvatar(id, formData);
+            // Update UI instantly
+            setEmployee(res.data.employee);
+        } catch (err) {
+            console.error(err);
+            alert("Failed to upload image");
+        }
+    };
+
     return (
         <div className="container mt-4">
 
@@ -117,6 +136,49 @@ export default function EmployeeDetails() {
 
             <div className="card">
                 <div className="card-header">
+                    {employee.avatarUrl ? (
+                        <img
+                            src={`${API_ROOT}${employee.avatarUrl}`}
+                            alt={`${employee.first_name} ${employee.last_name}`}
+                            style={{
+                                width: 96,
+                                height: 96,
+                                borderRadius: "50%",
+                                objectFit: "cover",
+                                border: "2px solid #dee2e6",
+                            }}
+                        />
+                    ) : (
+                        <div
+                            style={{
+                                width: 96,
+                                height: 96,
+                                borderRadius: "50%",
+                                border: "2px dashed #ced4da",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                fontSize: 12,
+                                color: "#6c757d",
+                            }}
+                        >
+                            No profile picture
+                        </div>
+                    )}
+                    <button
+                        className="btn btn-outline-secondary btn-sm"
+                        onClick={() => fileInputRef.current.click()}
+                    >
+                        Upload New Photo
+                    </button>
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        ref={fileInputRef}
+                        style={{ display: "none" }}
+                        onChange={handleAvatarUpload}
+                    />
 
                     <h4 className="mb-0">
                         {employee.first_name} {employee.last_name}
@@ -233,11 +295,11 @@ export default function EmployeeDetails() {
 
                     <div class-name="modal-footer">
                         <button type="button" className="btn btn-secondary my-2 mx-2" onClick={() => setShowEdit(false)}>Cancel</button>
-                        <button 
-                            disabled={!validateEdit(editForm.first_name, 
-                            editForm.last_name, 
-                            editForm.position, editForm.salary, 
-                            editForm.email, editForm.department)}
+                        <button
+                            disabled={!validateEdit(editForm.first_name,
+                                editForm.last_name,
+                                editForm.position, editForm.salary,
+                                editForm.email, editForm.department)}
                             type="submit" className="btn btn-primary my-2 mx-2">Save changes</button>
                     </div>
 

@@ -1,7 +1,8 @@
 import axios from "axios";
+export const API_ROOT = "https://101500729-comp3123-assignment1.vercel.app";
 
 export const api = axios.create({
-  baseURL: "https://101500729-comp3123-assignment1.vercel.app/api",
+  baseURL: `${API_ROOT}/api`,
   headers: { "Content-Type": "application/json" }
 });
 
@@ -22,6 +23,9 @@ export const EmployeesAPI = {
   updateEmployee: (id, payload) => api.put(`/v1/employees/${id}`, payload),
   patchDepartment: (id, department) => api.patch(`/v1/employees/${id}`, { department }),
   deleteEmployee: (id) => api.delete(`/v1/employees/${id}`),
+  uploadAvatar: (id, formData) => api.post(`/v1/employees/${id}/avatar`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    }),
 };
 
 export const UsersAPI = {

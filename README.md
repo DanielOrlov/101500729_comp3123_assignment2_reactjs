@@ -3,15 +3,14 @@ Student: Daniil Orlov <br>
 Student id: 101500729 <br>
 
 To do:
-- Sign Up
-- Logout
-- automatic redirect if logged in
 - add profile pic
 - Update search - only position and department
 
 Completed tasks:
 - Add Employee 
 - Login
+- Sign Up
+- Logout
 
 # Getting Started with Create React App
 

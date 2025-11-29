@@ -65,7 +65,7 @@ export default function Employees() {
             <span className="text-muted">Logged in as: <strong>{user.username}</strong></span>
           )}
 
-          <button onClick={handleLogout}className="btn btn-outline-danger btn-sm">Logout</button>
+          <button onClick={handleLogout} className="btn btn-outline-danger btn-sm">Logout</button>
         </div>
       </div>
 
@@ -77,7 +77,7 @@ export default function Employees() {
             <input
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Search by name, email, or department..."
+              placeholder="Search by position or department..."
               className="form-control"
             />
           </div>
@@ -110,8 +110,8 @@ export default function Employees() {
           <tr>
             <th>Name</th>
             <th>Email</th>
+            <th>Position</th>
             <th>Department</th>
-            <th>Salary ($)</th>
             <th style={{ width: "240px" }}>Actions</th>
           </tr>
         </thead>
@@ -120,8 +120,8 @@ export default function Employees() {
             <tr key={e._id}>
               <td>{e.first_name} {e.last_name}</td>
               <td>{e.email}</td>
+              <td>{e.position}</td>
               <td>{e.department}</td>
-              <td>{formatSalary(e.salary)}</td>
               <td>
                 <div>
                   <Link to={`/employees/${e._id}`} className="btn btn-primary me-2">View</Link>
